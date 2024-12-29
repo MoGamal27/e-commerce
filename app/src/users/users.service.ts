@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -52,12 +51,12 @@ export class UsersService {
   }
 
 
-  getAllUsers(query: any) {
+  async getAllUsers(query: any) {
     const { 
       limit = 100,
       skip = 0,
       sort = 'asc',
-      name 
+      name,
       email,
       role
     } = query;
@@ -71,22 +70,38 @@ export class UsersService {
     }
 
     if (!['asc', 'desc'].includes(sort)) {
-      throw new HttpException('Invalid sort', 400);
+      throw new HttpException('Sort must be asc or desc', 400);
+    }
+
+    if (!['ADMIN', 'USER'].includes(role)) {
+      throw new HttpException('Role must be ADMIN or USER', 400);
     }
 
       
-   const users =  this.prisma.user.
-   findMany()
-   .skip(skip)
-   .limit(limit)
-   .where('name', new RegExp(name, 'i'))
-   .where('email', new RegExp(email, 'i'))
-   .where('role', new RegExp(role, 'i'))
-   .sort({name: sort});
-   .select({
-     -v password,
-   })
-   
+    const users = await this.prisma.user.findMany({
+      take: +limit,
+      skip: +skip,
+      where: {
+        name: { contains: name, mode: 'insensitive' },
+        email: { contains: email, mode: 'insensitive' },
+        role: role ? { equals: role } : undefined  
+      },
+      orderBy: {
+        name: sort,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        avatar: true,
+        age: true,
+        phoneNumber: true,
+        address: true,
+        gender: true,
+        isActive: true
+      },
+    });
    return {
     status: 200,
     message: 'Users found successfully',
