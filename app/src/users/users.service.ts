@@ -51,6 +51,21 @@ export class UsersService {
   }
 
 
+ /**
+  * @desc  Get all users
+  * @param query {
+  *   limit: number,
+  *   skip: number,
+  *   sort: 'asc' | 'desc',
+  *   name: string,
+  *   email: string,
+  *   role: 'ADMIN' | 'USER'
+  * }
+  * @returns {Object} - User object
+  * @throws {Error} - If user not found
+  * @access  Private[ADMIN]
+  * @route   GET /api/users
+  */
   async getAllUsers(query: any) {
     const { 
       limit = 100,
