@@ -21,7 +21,7 @@ export class UsersController {
 
   @Get()
   getAllUsers(@Query() query: any) {
-    return this.usersService.getAllUsers();
+    return this.usersService.getAllUsers(query);
   }
 
   @Get(':id')
