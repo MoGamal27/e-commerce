@@ -52,8 +52,48 @@ export class UsersService {
   }
 
 
-  getAllUsers() {
-    return this.prisma.user.findMany();
+  getAllUsers(query: any) {
+    const { 
+      limit = 100,
+      skip = 0,
+      sort = 'asc',
+      name 
+      email,
+      role
+    } = query;
+
+    if (Number.isNaN(Number(+limit))) {
+      throw new HttpException('Invalid limit', 400);
+    }
+
+    if (Number.isNaN(Number(+skip))) {
+      throw new HttpException('Invalid skip', 400);
+    }
+
+    if (!['asc', 'desc'].includes(sort)) {
+      throw new HttpException('Invalid sort', 400);
+    }
+
+      
+   const users =  this.prisma.user.
+   findMany()
+   .skip(skip)
+   .limit(limit)
+   .where('name', new RegExp(name, 'i'))
+   .where('email', new RegExp(email, 'i'))
+   .where('role', new RegExp(role, 'i'))
+   .sort({name: sort});
+   .select({
+     -v password,
+   })
+   
+   return {
+    status: 200,
+    message: 'Users found successfully',
+    length: users.length,
+    data: users,
+  };
+
   }
 
 
