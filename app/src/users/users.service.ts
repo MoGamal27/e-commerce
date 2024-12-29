@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -8,7 +9,15 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  /**
+ * @desc    Create a new user
+ * @route   POST /api/users
+ * @access  Private[ADMIN]
+ * @returns {Object} - User object
+ * @throws {Error} - If user already exists
+ */
+  async createUser(createUserDto: CreateUserDto): Promise<{status: string, message: string, data: Object }> {
+
     const existUser = await this.prisma.user.findUnique({
       where: {
         email: createUserDto.email
@@ -31,6 +40,7 @@ export class UsersService {
       status: 'success',
       message: 'User created successfully',
       data: {
+        id: newUser.id,
         name: newUser.name,
         email: newUser.email,
         phoneNumber: newUser.phoneNumber,
@@ -41,14 +51,33 @@ export class UsersService {
     };
   }
 
+
   getAllUsers() {
     return this.prisma.user.findMany();
   }
 
-  async getUserById(id: number) {
+
+  /**
+   * @desc    Get a user by id
+   * @route   GET /api/users/:id
+   * @access  Private[ADMIN]
+   * @returns {Object} - User object
+   * @throws {Error} - If user not found
+   */
+  async getUserById(id: number): Promise<{status: string, data: Object }> {
+
     const user = await this.prisma.user.findUnique({
       where: {
         id
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        address: true,
+        age: true,
+        gender: true,
       }
     });
 
@@ -56,19 +85,45 @@ export class UsersService {
       throw new HttpException('User not found', 404);
     }
 
-    return user;
+    return {
+      status: 'success',
+      data: user
+    }
   }
 
-  async updateUserById(id: number, data: Prisma.UserUpdateInput) {
+
+
+  /**
+   * @desc    Update a user by id
+   * @route   PUT /api/users/:id
+   * @access  Private[ADMIN]
+   * @returns {Object} - User object
+   * @throws {Error} - If user not found
+   */
+  async updateUserById(id: number, updateUserDto: UpdateUserDto): Promise<{status: string, message: string, data: Object }> {
+   
     const findUser = await this.getUserById(id);
 
     if (!findUser) {
       throw new HttpException('User not found', 404);
     }
 
-    return this.prisma.user.update({
+    const hashedPassword = bcrypt.hashSync(updateUserDto.password, 10);
+
+    const data = {
+      ...updateUserDto,
+      password: hashedPassword
+    };
+
+    const updatedUser = await this.prisma.user.update({
       where: { id }, data
     });
+
+    return {
+      status: 'success',
+      message: 'User updated successfully',
+      data: updatedUser
+    };
   }
 
   async deleteUserById(id: number) {
