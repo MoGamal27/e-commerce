@@ -1,15 +1,16 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SignInDto, SignUpDto } from './dto/auth.dto';
+import { SignInDto, SignUpDto, SendVerificationCodeDto, ResetPasswordDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
-
+import { EmailService } from '../email/email.service'; 
 
 @Injectable()
 export class AuthService {
     constructor(
         private prisma: PrismaService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private emailService: EmailService
     ) {}
     
    
@@ -90,6 +91,63 @@ export class AuthService {
         }
       }
      }
+
+     
+      // Generate a 6-digit verification code
+  private generateVerificationCode(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+     async sendVerificationCode(dto: SendVerificationCodeDto) {
+      const user = await this.prisma.user.findUnique({
+        where: { email: dto.email },
+      });
+  
+      // If the user exists, generate and send a verification code
+      if (user) {
+        const verificationCode = this.generateVerificationCode();
+  
+        // Save the verification code in the user's record
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: { verificationCode },
+        });
+  
+        // Send the code via email
+        const emailSubject = 'Password Reset Verification Code';
+        const emailText = `Your verification code is: ${verificationCode}`;
+        await this.emailService.sendEmail(user.email, emailSubject, emailText);
+      }
+  
+      // same response for all cases
+      // improve security to avoid Email Enumeration attack
+      return { message: 'if email exist, a verification code will be sent to your email' };
+    }
+  
+    // Reset password using verification code
+    async resetPassword(dto: ResetPasswordDto): Promise<void> {
+      const user = await this.prisma.user.findUnique({
+        where: { email: dto.email },
+      });
+  
+      // If the user doesn't exist or the code is invalid, return success (but do nothing)
+      // this is improve security to avoid Email Enumeration attack
+      if (!user || user.verificationCode !== dto.verificationCode) {
+        return;
+      }
+  
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
+  
+      // Update the user's password and clear the verification code
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          password: hashedPassword,
+          verificationCode: null, 
+        },
+      });  
+    }
     }
 
 
