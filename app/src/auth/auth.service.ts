@@ -1,7 +1,7 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SignUpDto } from './dto/auth.dto';
+import { SignInDto, SignUpDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 
 
@@ -33,7 +33,7 @@ export class AuthService {
        
            const newUser = await this.prisma.user.create({ data });
 
-           const payload = { id: newUser.id };
+           const payload = { id: newUser.id, role: newUser.role };
 
            const token = await this.jwtService.signAsync(payload, {
             secret: process.env.JWT_SECRET,
@@ -53,7 +53,44 @@ export class AuthService {
           }
 
         }
+
+     async signIn(signInDto: SignInDto) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: signInDto.email
+            }
+        });
+
+        if(!user){
+          throw new NotFoundException('User not found');
+        }
+
+        const isMatch = await bcrypt.compare(signInDto.password, user.password);
+
+        if(!isMatch){
+          throw new HttpException('Invalid Password', 401);
+        } 
+
+       const payload = { id: user.id, role: user.role };
+       
+       const token = await this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      return {
+        status: 'success',
+        message: 'Sign in successfully',
+        data: {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+          access_token: token
+        }
+      }
      }
+    }
 
 
 
