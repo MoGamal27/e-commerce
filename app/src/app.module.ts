@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
-import { AuthResolver } from './auth/auth.resolver';
 import { AuthModule } from './auth/auth.module';
 
 
@@ -12,10 +11,10 @@ import { AuthModule } from './auth/auth.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '600000000s' },
+      signOptions: { expiresIn: '1d' },
     }),
     UsersModule,
-    AuthModule],
-  providers: [AuthResolver],
+    AuthModule
+  ],
 })
 export class AppModule {}
