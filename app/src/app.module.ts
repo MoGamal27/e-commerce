@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
+import { CategoryModule } from './category/category.module';
 
 
 @Module({
@@ -18,7 +19,8 @@ import { EmailModule } from './email/email.module';
     }),
     EmailModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    CategoryModule
   ],
 })
 export class AppModule {}
