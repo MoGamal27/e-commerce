@@ -125,7 +125,7 @@ export class AuthService {
     }
   
     // Reset password using verification code
-    async resetPassword(dto: ResetPasswordDto): Promise<void> {
+    async resetPassword(dto: ResetPasswordDto) {
       const user = await this.prisma.user.findUnique({
         where: { email: dto.email },
       });
@@ -147,6 +147,8 @@ export class AuthService {
           verificationCode: null, 
         },
       });  
+
+      return { message: 'Updated Password Successfully' };
     }
     }
 
