@@ -12,7 +12,7 @@ export class EmailService {
         service: 'gmail',
         auth: {
             user: this.configService.get<string>('EMAIL_USER'),
-            pass: this.configService.get<string>('EMAIL_PASSWORD')
+            pass: this.configService.get<string>('EMAIL_PASS')
         }
     })
   }
