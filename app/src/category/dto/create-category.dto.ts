@@ -8,9 +8,8 @@ export class CreateCategoryDto {
     @MaxLength(30, { message: 'Name must be at most 30 characters long' })
     name: string
 
-    @IsOptional()
-    @IsString({ message: 'Avatar must be a string' })
-    @IsUrl({}, { message: 'Avatar must be a valid URL' })
+    @IsString({ message: 'Image must be a string' })
+    @IsUrl({}, { message: 'Image must be a valid URL' })
     image: string;
 
 }
