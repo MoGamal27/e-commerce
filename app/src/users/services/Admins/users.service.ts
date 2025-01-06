@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/create-user.dto';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { paginate } from 'src/utils/pagination.util';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -66,64 +67,11 @@ export class UsersService {
   * @access  Private[ADMIN]
   * @route   GET /api/users
   */
-  async getAllUsers(query: any) {
-    const { 
-      limit = 100,
-      skip = 0,
-      sort = 'asc',
-      name,
-      email,
-      role
-    } = query;
-
-    if (Number.isNaN(Number(+limit))) {
-      throw new HttpException('Invalid limit', 400);
-    }
-
-    if (Number.isNaN(Number(+skip))) {
-      throw new HttpException('Invalid skip', 400);
-    }
-
-    if (!['asc', 'desc'].includes(sort)) {
-      throw new HttpException('Sort must be asc or desc', 400);
-    }
-
-    if (!['ADMIN', 'USER'].includes(role)) {
-      throw new HttpException('Role must be ADMIN or USER', 400);
-    }
-
-      
-    const users = await this.prisma.user.findMany({
-      take: +limit,
-      skip: +skip,
-      where: {
-        name: { contains: name, mode: 'insensitive' },
-        email: { contains: email, mode: 'insensitive' },
-        role: role ? { equals: role } : undefined  
-      },
-      orderBy: {
-        name: sort,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        avatar: true,
-        age: true,
-        phoneNumber: true,
-        address: true,
-        gender: true,
-        isActive: true
-      },
+   getAllUsers(query: any) {
+    
+    return paginate(this.prisma, 'user', query, ['name', 'email'],{
+      role: (value) => ({ equals: value }),
     });
-   return {
-    status: 200,
-    message: 'Users found successfully',
-    length: users.length,
-    data: users,
-  };
-
   }
 
 
