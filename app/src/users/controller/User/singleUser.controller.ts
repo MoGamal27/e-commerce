@@ -1,7 +1,7 @@
 import { Controller, Get, Body, Patch, Param, Delete, ValidationPipe, UsePipes, UseGuards} from '@nestjs/common';
 import { singleUserService } from '../../services/User/singleUser.service';
 import { UpdateUserDto } from '../../dto/update-user.dto';
-import { AuthGuard } from '../../guard/Auth.guard';
+import { AuthGuard } from '../../../auth/guard/Auth.guard';
 
 @Controller('singleUser')
 @UsePipes(new ValidationPipe({
