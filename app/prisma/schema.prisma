@@ -51,3 +51,9 @@ model subCategory {
   name String
   categoryId Int
 }
+
+model brand {
+  id Int @id @default(autoincrement())
+  name String
+  image String
+}
