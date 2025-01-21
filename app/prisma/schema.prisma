@@ -63,5 +63,5 @@ model coupon {
   code String
   discount Int
   isActive Boolean?
-  expireDate DateTime
+  expireDate String
 }
