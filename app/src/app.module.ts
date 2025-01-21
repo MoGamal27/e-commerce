@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { CategoryModule } from './category/category.module';
 import { SubCategoryModule } from './subCategory/subCategory.module';
+import { BrandModule } from './brand/brand.module';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { SubCategoryModule } from './subCategory/subCategory.module';
     AuthModule,
     CategoryModule,
     SubCategoryModule,
+    BrandModule,
   ],
 })
 export class AppModule {}
