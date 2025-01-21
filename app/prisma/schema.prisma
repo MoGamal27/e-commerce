@@ -65,3 +65,9 @@ model coupon {
   isActive Boolean?
   expireDate String
 }
+
+model suppliers {
+  id Int @id @default(autoincrement())
+  name String
+  website String
+}
