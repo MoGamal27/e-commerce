@@ -7,6 +7,7 @@ import { EmailModule } from './email/email.module';
 import { CategoryModule } from './category/category.module';
 import { SubCategoryModule } from './subCategory/subCategory.module';
 import { BrandModule } from './brand/brand.module';
+import { CouponModule } from './coupon/coupon.module'; 
 
 
 @Module({
@@ -25,6 +26,7 @@ import { BrandModule } from './brand/brand.module';
     CategoryModule,
     SubCategoryModule,
     BrandModule,
+    CouponModule,
   ],
 })
 export class AppModule {}
