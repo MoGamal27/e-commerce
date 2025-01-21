@@ -57,3 +57,11 @@ model brand {
   name String
   image String
 }
+
+model coupon {
+  id Int @id @default(autoincrement())
+  code String
+  discount Int
+  isActive Boolean?
+  expireDate DateTime
+}
