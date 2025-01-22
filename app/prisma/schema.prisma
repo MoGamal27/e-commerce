@@ -71,3 +71,9 @@ model suppliers {
   name String
   website String
 }
+
+model tax{
+  id Int @id @default(autoincrement())
+  taxPrice Int @default(0)
+  shippingPrice Int @default(0)
+}

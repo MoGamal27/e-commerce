@@ -9,6 +9,7 @@ import { SubCategoryModule } from './subCategory/subCategory.module';
 import { BrandModule } from './brand/brand.module';
 import { CouponModule } from './coupon/coupon.module'; 
 import { SuppliersModule } from './suppliers/suppliers.module';
+import { TaxModule } from './tax/tax.module';
 
 
 @Module({
@@ -28,7 +29,8 @@ import { SuppliersModule } from './suppliers/suppliers.module';
     SubCategoryModule,
     BrandModule,
     CouponModule,
-    SuppliersModule
+    SuppliersModule,
+    TaxModule
   ],
 })
 export class AppModule {}
