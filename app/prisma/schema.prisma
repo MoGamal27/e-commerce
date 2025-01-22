@@ -74,6 +74,6 @@ model suppliers {
 
 model tax{
   id Int @id @default(autoincrement())
-  taxPrice Int @default(0)
-  shippingPrice Int @default(0)
+  taxPrice Int? @default(0)
+  shippingPrice Int? @default(0)
 }
