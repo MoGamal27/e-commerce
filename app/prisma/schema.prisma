@@ -92,9 +92,9 @@ model product {
   priceAfterDiscount Int? @default(0)
   color String?
   ratings Int? @default(0)
-  categoryId Int
-  subCategoryId Int?
-  brandId Int?
+  categoryId Int @unique
+  subCategoryId Int? @unique
+  brandId Int? @unique
   category category @relation(fields: [categoryId], references: [id])
   subCategory subCategory? @relation(fields: [subCategoryId], references: [id])
   brand brand? @relation(fields: [brandId], references: [id])
