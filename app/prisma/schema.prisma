@@ -91,7 +91,7 @@ model product {
   price Int
   priceAfterDiscount Int? @default(0)
   color String?
-  ratings Int
+  ratings Int? @default(0)
   categoryId Int
   subCategoryId Int?
   brandId Int?
