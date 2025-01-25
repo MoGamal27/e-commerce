@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { paginate } from 'src/utils/pagination.util';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { paginate } from 'src/utils/pagination.util';
 import { query } from 'express';
+
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
@@ -42,9 +43,9 @@ export class ProductService {
    }
   }
 
-  findAll() {
-    return paginate(this.prisma, 'product',query, ['title', 'description']);
-  }
+  findAll(query: any){
+  return paginate(this.prisma, 'product',query, ['title', 'description']);
+ }
 
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({ where: { id } });
