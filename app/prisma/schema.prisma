@@ -43,6 +43,7 @@ model category {
   name String
   image String
   subCategories subCategory[]
+  products product[]
 }
 
 model subCategory {
@@ -50,12 +51,14 @@ model subCategory {
   category category @relation(fields: [categoryId], references: [id])
   name String
   categoryId Int
+  products product[]
 }
 
 model brand {
   id Int @id @default(autoincrement())
   name String
   image String
+  products product[]
 }
 
 model coupon {
@@ -76,4 +79,23 @@ model tax{
   id Int @id @default(autoincrement())
   taxPrice Int? @default(0)
   shippingPrice Int? @default(0)
+}
+
+model product {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  quantity Int
+  image String
+  sold Int
+  price Int
+  priceAfterDiscount Int
+  color String
+  ratings Int
+  categoryId Int
+  subCategoryId Int
+  brandId Int
+  category category @relation(fields: [categoryId], references: [id])
+  subCategory subCategory @relation(fields: [subCategoryId], references: [id])
+  brand brand @relation(fields: [brandId], references: [id])
 }
