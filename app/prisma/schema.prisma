@@ -86,16 +86,16 @@ model product {
   title String
   description String
   quantity Int
-  image String
-  sold Int
+  image String?
+  sold Int? @default(0)
   price Int
-  priceAfterDiscount Int
-  color String
+  priceAfterDiscount Int? @default(0)
+  color String?
   ratings Int
   categoryId Int
-  subCategoryId Int
-  brandId Int
+  subCategoryId Int?
+  brandId Int?
   category category @relation(fields: [categoryId], references: [id])
-  subCategory subCategory @relation(fields: [subCategoryId], references: [id])
-  brand brand @relation(fields: [brandId], references: [id])
+  subCategory subCategory? @relation(fields: [subCategoryId], references: [id])
+  brand brand? @relation(fields: [brandId], references: [id])
 }
