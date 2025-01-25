@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Length, Max, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl,  Max,  Min, MinLength } from "class-validator";
 
 export class CreateProductDto {
 
@@ -14,7 +14,8 @@ export class CreateProductDto {
     description: string;
     
     @IsNotEmpty({ message: 'Quantity is required' })
-    @Length(1, 500, { message: 'Quantity must be between 1 and 500' })
+    @Min(1, { message: 'Quantity must be at least 1' })
+    @Max(1000, { message: 'Quantity must be at most 1000' })
     @IsNumber({}, { message: 'Quantity must be a number' })
     quantity: number;
     
@@ -29,7 +30,8 @@ export class CreateProductDto {
 
     @IsNotEmpty({ message: 'Price is required' })
     @IsNumber({}, { message: 'Price must be a number' })
-    @Length(1, 20000, { message: 'Price must be between 1 and 20000' })
+    @Min(1, { message: 'Price must be at least 1' })
+    @Max(20000, { message: 'Price must be at most 20000' })
     price: number;
 
     @Max(20000, { message: 'Discount must be at least 20000' })
