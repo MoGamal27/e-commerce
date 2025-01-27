@@ -26,6 +26,7 @@ model User {
   gender Gender?
   isActive Boolean? @default(true)
   verificationCode String?
+  reviiews review[]
 }
 
 enum Role {
@@ -92,10 +93,22 @@ model product {
   priceAfterDiscount Int? @default(0)
   color String?
   ratings Int? @default(0)
-  categoryId Int @unique
-  subCategoryId Int? @unique
-  brandId Int? @unique
+  categoryId Int 
+  subCategoryId Int? 
+  brandId Int? 
   category category @relation(fields: [categoryId], references: [id])
   subCategory subCategory? @relation(fields: [subCategoryId], references: [id])
   brand brand? @relation(fields: [brandId], references: [id])
+  reviews review[]
+}
+
+model review {
+  id Int @id @default(autoincrement())
+  ratingText String?
+  rating Int
+  userId Int
+  productId Int
+  user User @relation(fields: [userId], references: [id])
+  product product @relation(fields: [productId], references: [id])
+  
 }
