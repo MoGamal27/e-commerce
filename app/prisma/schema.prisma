@@ -27,6 +27,7 @@ model User {
   isActive Boolean? @default(true)
   verificationCode String?
   reviiews review[]
+  cart cart[]
 }
 
 enum Role {
@@ -68,6 +69,7 @@ model coupon {
   discount Int
   isActive Boolean?
   expireDate String
+  cart cart[]
 }
 
 model suppliers {
@@ -111,5 +113,15 @@ model review {
   productId Int
   user User @relation(fields: [userId], references: [id])
   product product @relation(fields: [productId], references: [id])
-  
+}
+
+model cart {
+  id Int @id @default(autoincrement())
+  cartItems Json 
+  totalPrice Decimal 
+  totalPriceAfterDiscount Decimal
+  userId Int
+  couponId Int?
+  user User @relation(fields: [userId], references: [id])
+  coupon coupon? @relation(fields: [couponId], references: [id])
 }
