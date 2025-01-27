@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -13,18 +13,18 @@ export class ProductService {
    const category = await this.prisma.category.findUnique({ where: { id: createProductDto.categoryId } });
 
    if(!category) {
-    throw new Error('Category not found');
+    throw new HttpException('Category not found', 404);
    }
    const subCategory = await this.prisma.subCategory.findUnique({ where: { id: createProductDto.subCategoryId } });
 
    if(!subCategory) {
-    throw new Error('SubCategory not found');
+    throw new HttpException('SubCategory not found',404);
    }
 
    const brand = await this.prisma.brand.findUnique({ where: { id: createProductDto.brandId } });
 
    if(!brand) {
-    throw new Error('Brand not found');
+    throw new HttpException('Brand not found', 404);
    }
 
    const data = {
