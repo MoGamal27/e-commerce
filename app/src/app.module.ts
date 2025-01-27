@@ -11,6 +11,7 @@ import { CouponModule } from './coupon/coupon.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { TaxModule } from './tax/tax.module';
 import { ProductModule } from './product/product.module';
+import { ReviewModule } from './review/review.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { ProductModule } from './product/product.module';
     CouponModule,
     SuppliersModule,
     TaxModule,
-    ProductModule
+    ProductModule,
+    ReviewModule
   ],
 })
 export class AppModule {}
