@@ -2,6 +2,8 @@
 
 This document provides an overview of the source code structure for the E-commerce Backend built with NestJS.
 
+## Postman
+- [Postman Collection](https://documenter.getpostman.com/view/37843029/2sAYX2N4LZ) 
 ## Core Files
 - `main.ts` - The entry point of the application
 - `app.module.ts` - The root module of the application
