@@ -12,6 +12,8 @@ import { SuppliersModule } from './suppliers/suppliers.module';
 import { TaxModule } from './tax/tax.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
+import { CartModule } from './cart/cart.module';
+import { CartItemModule } from './cart-item/cart-item.module';
 
 
 @Module({
@@ -34,7 +36,9 @@ import { ReviewModule } from './review/review.module';
     SuppliersModule,
     TaxModule,
     ProductModule,
-    ReviewModule
+    ReviewModule,
+    CartModule,
+    CartItemModule
   ],
 })
 export class AppModule {}
