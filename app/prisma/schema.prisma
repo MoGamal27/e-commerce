@@ -102,6 +102,7 @@ model product {
   category category @relation(fields: [categoryId], references: [id])
   subCategory subCategory? @relation(fields: [subCategoryId], references: [id])
   brand brand? @relation(fields: [brandId], references: [id])
+  cartItems cartItems[]
   reviews review[]
 }
 
@@ -117,11 +118,20 @@ model review {
 
 model cart {
   id Int @id @default(autoincrement())
-  cartItems Json 
-  totalPrice Decimal 
-  totalPriceAfterDiscount Decimal
+  cartItems cartItems[]
+  totalPrice Decimal? 
+  totalPriceAfterDiscount Decimal?
   userId Int
   couponId Int?
   user User @relation(fields: [userId], references: [id])
   coupon coupon? @relation(fields: [couponId], references: [id])
+}
+
+model cartItems {
+  id Int @id @default(autoincrement())
+  productId Int
+  quantity Int
+  cartId Int
+  product product @relation(fields: [productId], references: [id])
+  cart cart @relation(fields: [cartId], references: [id])
 }
